@@ -2,7 +2,10 @@
     <div class="container" style="max-width: 550px">
       <!-- Heading -->
       <h1 class="text-center mt-5" style="color:#000;">Todo List📝</h1>
-  
+      <!-- Creation Date -->
+<div class="d-flex mt-2">
+  <p class="mb-0"><strong>Created on:</strong> {{ creationDate }}</p>
+</div>
       <!-- Input -->
       <div class="d-flex mt-5">
         <input
@@ -95,8 +98,18 @@
             status: "to-do",
           },
         ],
+        creationDate: "",
       };
     },
+    created() {
+    // Set the creation date when the component is created
+    this.setCreationDate();
+    this.retrieveTasks();
+  },
+
+  beforeUnmount() {
+    this.saveTasks();
+  },
   
     methods: {
       capitalizeFirstChar(str) {
@@ -146,7 +159,23 @@
   
         this.task = "";
       },
+      setCreationDate() {
+      const now = new Date();
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      this.creationDate = now.toLocaleDateString(undefined, options);
     },
+
+    retrieveTasks() {
+      const savedTasks = localStorage.getItem("tasks");
+      if (savedTasks) {
+        this.tasks = JSON.parse(savedTasks);
+      }
+    },
+
+    saveTasks() {
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    },
+  },
   };
   </script>
   
